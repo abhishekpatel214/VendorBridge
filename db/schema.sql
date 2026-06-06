@@ -9,6 +9,16 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Password Resets
+CREATE TABLE IF NOT EXISTS password_resets (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  token VARCHAR(255) NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Vendors
 CREATE TABLE IF NOT EXISTS vendors (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -97,14 +107,16 @@ CREATE TABLE IF NOT EXISTS quotation_items (
 -- Approvals
 CREATE TABLE IF NOT EXISTS approvals (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  quotation_id INT NOT NULL,
-  approver_id INT NOT NULL,
+  type ENUM('QUOTATION','VENDOR') NOT NULL,
+  reference_id INT NOT NULL,
   status ENUM('PENDING','APPROVED','REJECTED') DEFAULT 'PENDING',
-  remarks TEXT,
-  actioned_at TIMESTAMP NULL,
+  requested_by INT NOT NULL,
+  approved_by INT,
+  comments TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (quotation_id) REFERENCES quotations(id) ON DELETE CASCADE,
-  FOREIGN KEY (approver_id) REFERENCES users(id) ON DELETE CASCADE
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (requested_by) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (approved_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Purchase Orders
@@ -128,14 +140,15 @@ CREATE TABLE IF NOT EXISTS purchase_orders (
 -- Invoices
 CREATE TABLE IF NOT EXISTS invoices (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  invoice_number VARCHAR(50) UNIQUE,    -- e.g. INV-2024-0001
-  purchase_order_id INT NOT NULL,
-  issued_at DATE,
+  invoice_number VARCHAR(50) UNIQUE,
+  po_id INT NOT NULL,
+  vendor_id INT NOT NULL,
+  amount DECIMAL(15,2),
   due_date DATE,
   status ENUM('DRAFT','SENT','PAID') DEFAULT 'DRAFT',
-  email_sent_at TIMESTAMP NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id) ON DELETE CASCADE
+  FOREIGN KEY (po_id) REFERENCES purchase_orders(id) ON DELETE CASCADE,
+  FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
 );
 
 -- Activity Logs

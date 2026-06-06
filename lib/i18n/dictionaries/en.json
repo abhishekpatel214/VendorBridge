@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "vendors": "Vendors",
+    "rfqs": "RFQs",
+    "quotations": "Quotations",
+    "approvals": "Approvals",
+    "purchaseOrders": "Purchase Orders",
+    "invoices": "Invoices",
+    "reports": "Reports",
+    "activity": "Activity Logs",
+    "profile": "Profile"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search...",
+    "status": "Status",
+    "actions": "Actions",
+    "logout": "Log out"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Overview of your procurement activities",
+    "totalPOs": "Total Purchase Orders",
+    "activeRFQs": "Active RFQs",
+    "totalSpend": "Total Spend",
+    "pendingApprovals": "Pending Approvals",
+    "recentPOs": "Recent Purchase Orders",
+    "recentRFQs": "Recent RFQs",
+    "addVendor": "Add Vendor",
+    "newRFQ": "New RFQ"
+  },
+  "profile": {
+    "title": "Update Profile",
+    "subtitle": "Manage your account details and password",
+    "personalInfo": "Personal Information",
+    "name": "Full Name",
+    "email": "Email Address",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "updateProfile": "Update Profile",
+    "updatePassword": "Update Password"
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Enter your email and password to access your account",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "demoAccounts": "Demo accounts:"
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "subtitle": "Enter your email address and we'll send you a link to reset your password.",
+    "email": "Email",
+    "sendLink": "Send Reset Link",
+    "backToLogin": "Back to login"
+  },
+  "resetPassword": {
+    "title": "Set New Password",
+    "subtitle": "Please enter your new password below.",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "submit": "Reset Password",
+    "invalidLink": "Invalid Link",
+    "invalidMessage": "This password reset link is invalid or missing the security token. Please request a new link.",
+    "backToForgot": "Back to Forgot Password"
+  }
+}

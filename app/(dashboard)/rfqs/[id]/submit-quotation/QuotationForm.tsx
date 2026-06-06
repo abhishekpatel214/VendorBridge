@@ -83,7 +83,7 @@ export default function QuotationForm({ rfq }: { rfq: any }) {
                     <TableCell>
                       <input type="hidden" name="rfq_item_id" value={item.id} />
                       <div className="font-medium">{item.product_name}</div>
-                      <div className="text-xs text-slate-500">{item.specifications}</div>
+                      <div className="text-xs text-muted-foreground">{item.specifications}</div>
                     </TableCell>
                     <TableCell className="text-right">{item.quantity}</TableCell>
                     <TableCell>{item.unit}</TableCell>

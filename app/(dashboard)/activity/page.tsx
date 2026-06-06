@@ -14,7 +14,7 @@ const getIcon = (entityType: string) => {
     case 'APPROVAL': return <CheckSquare className="h-4 w-4 text-indigo-500" />;
     case 'PURCHASE_ORDER': return <ShoppingCart className="h-4 w-4 text-green-500" />;
     case 'INVOICE': return <FileText className="h-4 w-4 text-emerald-500" />;
-    default: return <Activity className="h-4 w-4 text-slate-500" />;
+    default: return <Activity className="h-4 w-4 text-muted-foreground" />;
   }
 };
 
@@ -37,18 +37,18 @@ export default async function ActivityPage() {
         <CardContent className="p-0">
           <div className="divide-y divide-slate-100">
             {logs.map((log) => (
-              <div key={log.id} className="flex items-start p-4 hover:bg-slate-50 transition-colors">
-                <div className="mt-1 bg-white border rounded-full p-2 mr-4 shadow-sm">
+              <div key={log.id} className="flex items-start p-4 hover:bg-muted transition-colors">
+                <div className="mt-1 bg-card border rounded-full p-2 mr-4 shadow-sm">
                   {getIcon(log.entity_type)}
                 </div>
                 <div className="flex-1">
-                  <p className="text-slate-800">
+                  <p className="text-foreground">
                     <span className="font-semibold">{log.user_name}</span>{" "}
                     <span className="text-slate-600">{log.action.toLowerCase()}</span>{" "}
                     <span className="font-medium text-slate-700">{log.entity_type} #{log.entity_id}</span>
                   </p>
                   {log.details && (
-                    <p className="text-sm text-slate-500 mt-1 italic">
+                    <p className="text-sm text-muted-foreground mt-1 italic">
                       "{log.details}"
                     </p>
                   )}
@@ -59,7 +59,7 @@ export default async function ActivityPage() {
               </div>
             ))}
             {logs.length === 0 && (
-              <div className="p-8 text-center text-slate-500">
+              <div className="p-8 text-center text-muted-foreground">
                 No activity logs found.
               </div>
             )}

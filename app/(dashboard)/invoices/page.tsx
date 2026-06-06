@@ -1,4 +1,6 @@
 import { getInvoices } from "@/lib/queries/invoices";
+import { getVendorIdByUserId } from "@/lib/queries/vendors";
+import { auth } from "@/lib/auth";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -12,9 +14,25 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { SearchX, Receipt } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
-export default async function InvoicesPage() {
-  const invoices = await getInvoices();
+export default async function InvoicesPage(
+  props: { searchParams: Promise<{ search?: string }> }
+) {
+  const searchParams = await props.searchParams;
+  const search = searchParams?.search || "";
+  const session = await auth();
+  const role = session?.user?.role;
+  let vendorId: number | undefined = undefined;
+  
+  if (role === "VENDOR" && session?.user?.id) {
+    const vId = await getVendorIdByUserId(parseInt(session.user.id));
+    if (vId) vendorId = vId;
+  }
+
+  const invoices = await getInvoices(vendorId, search);
 
   return (
     <div>
@@ -23,7 +41,18 @@ export default async function InvoicesPage() {
         description="Manage vendor invoices and payments"
       />
 
-      <div className="bg-white rounded-md shadow-sm border overflow-hidden">
+      <div className="bg-card p-4 rounded-md shadow-sm border mb-6 flex gap-4 items-center">
+        <form className="flex-1 max-w-md flex gap-2">
+          <Input 
+            name="search" 
+            placeholder="Search by Invoice #, PO #, or Vendor..." 
+            defaultValue={search}
+          />
+          <Button type="submit" variant="secondary">Search</Button>
+        </form>
+      </div>
+
+      <div className="bg-card rounded-md shadow-sm border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -58,16 +87,17 @@ export default async function InvoicesPage() {
                 </TableCell>
               </TableRow>
             ))}
-            {invoices.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-slate-500">
-                  No invoices found.
-                </TableCell>
-              </TableRow>
-            )}
           </TableBody>
         </Table>
       </div>
+
+      {invoices.length === 0 && (
+        <EmptyState 
+          icon={search ? SearchX : Receipt} 
+          title={search ? "No matches found" : "No invoices"}
+          description={search ? `No invoices found matching "${search}"` : "You don't have any invoices yet."}
+        />
+      )}
     </div>
   );
 }

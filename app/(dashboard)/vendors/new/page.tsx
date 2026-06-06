@@ -8,13 +8,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { createVendorAction } from "./actions";
+import { COUNTRY_CODES } from "@/lib/countryCodes";
+import { cn } from "@/lib/utils";
 
 export default function NewVendorPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [countryCode, setCountryCode] = useState("+91");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,8 +77,53 @@ export default function NewVendorPage() {
                 <Input id="email" name="email" type="email" required disabled={isLoading} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input id="phone" name="phone" disabled={isLoading} />
+                <Label htmlFor="phoneNumber">Phone</Label>
+                <div className="flex gap-2">
+                  <input type="hidden" name="countryCode" value={countryCode} />
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger render={
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        className="w-[120px] justify-between font-normal"
+                        disabled={isLoading}
+                      >
+                        {countryCode}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    } />
+                    <PopoverContent className="w-[200px] p-0">
+                      <Command>
+                        <CommandInput placeholder="Search country..." />
+                        <CommandList>
+                          <CommandEmpty>No country found.</CommandEmpty>
+                          <CommandGroup>
+                            {COUNTRY_CODES.map((item) => (
+                              <CommandItem
+                                key={`${item.country}-${item.code}`}
+                                value={`${item.code} ${item.country}`}
+                                onSelect={() => {
+                                  setCountryCode(item.code);
+                                  setOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    countryCode === item.code ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                                {item.code} ({item.country})
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  <Input id="phoneNumber" name="phoneNumber" className="flex-1" placeholder="9876543210" disabled={isLoading} />
+                </div>
               </div>
             </div>
 

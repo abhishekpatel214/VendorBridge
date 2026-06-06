@@ -34,7 +34,7 @@ export default async function ApprovalsPage(
         description="Review and process pending procurement requests"
       />
 
-      <div className="bg-white rounded-md shadow-sm border overflow-hidden">
+      <div className="bg-card rounded-md shadow-sm border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -51,7 +51,7 @@ export default async function ApprovalsPage(
             {approvals.map((approval) => (
               <TableRow key={approval.id}>
                 <TableCell>
-                  <span className="font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded text-xs">
+                  <span className="font-medium text-foreground bg-muted px-2 py-1 rounded text-xs">
                     {approval.type}
                   </span>
                 </TableCell>
@@ -59,7 +59,7 @@ export default async function ApprovalsPage(
                   {approval.type === 'QUOTATION' ? (
                     <div>
                       <div className="font-medium text-green-700">{approval.rfq_number}</div>
-                      <div className="text-xs text-slate-500">Vendor: {approval.vendor_name}</div>
+                      <div className="text-xs text-muted-foreground">Vendor: {approval.vendor_name}</div>
                     </div>
                   ) : (
                     <div>Vendor ID: {approval.reference_id}</div>
@@ -82,7 +82,7 @@ export default async function ApprovalsPage(
             ))}
             {approvals.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-slate-500">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   No approval requests found.
                 </TableCell>
               </TableRow>

@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import InvoiceActions from "./InvoiceActions";
+import EmailInvoiceButton from "./EmailInvoiceButton";
 import { Printer } from "lucide-react";
 
 export default async function InvoiceDetailPage(
@@ -41,6 +42,8 @@ export default async function InvoiceDetailPage(
                 <InvoiceActions invoiceId={invoice.id} />
               )}
               
+              <EmailInvoiceButton invoiceId={invoice.id} />
+
               {/* Note: Printer requires client-side onClick, usually we put it in a client component. 
                   But since we are just prototyping the view, we can leave it as a visual button 
                   or you can use Ctrl+P. */}
@@ -52,36 +55,36 @@ export default async function InvoiceDetailPage(
         />
       </div>
 
-      <div className="bg-white p-8 border rounded-lg shadow-sm print:shadow-none print:border-none print:p-0" id="print-area">
+      <div className="bg-card p-8 border rounded-lg shadow-sm print:shadow-none print:border-none print:p-0" id="print-area">
         <div className="flex justify-between items-start mb-8">
           <div>
             <h1 className="text-3xl font-bold text-blue-700">INVOICE</h1>
-            <p className="text-slate-500 mt-1">{invoice.vendor_name}</p>
+            <p className="text-muted-foreground mt-1">{invoice.vendor_name}</p>
           </div>
           <div className="text-right">
-            <h2 className="text-xl font-bold text-slate-800">{invoice.invoice_number}</h2>
-            <p className="text-slate-500 mt-1">Date: {formatDate(invoice.created_at)}</p>
-            <p className="text-slate-500 font-medium">Due Date: {formatDate(invoice.due_date)}</p>
+            <h2 className="text-xl font-bold text-foreground">{invoice.invoice_number}</h2>
+            <p className="text-muted-foreground mt-1">Date: {formatDate(invoice.created_at)}</p>
+            <p className="text-muted-foreground font-medium">Due Date: {formatDate(invoice.due_date)}</p>
             <StatusBadge status={invoice.status} className="mt-2" />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-8 mb-8">
           <div>
-            <h3 className="font-bold text-slate-800 mb-2 border-b pb-1">Billed To</h3>
+            <h3 className="font-bold text-foreground mb-2 border-b pb-1">Billed To</h3>
             <p className="font-medium">VendorBridge Corp.</p>
             <p className="text-slate-600 mt-1">123 Procurement Avenue</p>
             <p className="text-slate-600 mt-1">Tech City, TC 10101</p>
           </div>
           <div>
-            <h3 className="font-bold text-slate-800 mb-2 border-b pb-1">Reference</h3>
+            <h3 className="font-bold text-foreground mb-2 border-b pb-1">Reference</h3>
             <p className="text-slate-600 mt-1"><span className="font-medium">PO Number:</span> {invoice.po_number}</p>
             <p className="text-slate-600 mt-1"><span className="font-medium">RFQ Title:</span> {invoice.rfq_title}</p>
           </div>
         </div>
 
         <Table>
-          <TableHeader className="bg-slate-50">
+          <TableHeader className="bg-muted">
             <TableRow>
               <TableHead>Description</TableHead>
               <TableHead className="text-right">Quantity</TableHead>
@@ -94,7 +97,7 @@ export default async function InvoiceDetailPage(
               <TableRow key={item.id}>
                 <TableCell>
                   <div className="font-medium">{item.product_name}</div>
-                  <div className="text-xs text-slate-500">{item.specifications}</div>
+                  <div className="text-xs text-muted-foreground">{item.specifications}</div>
                 </TableCell>
                 <TableCell className="text-right">{item.quantity} {item.unit}</TableCell>
                 <TableCell className="text-right">{formatCurrency(item.unit_price)}</TableCell>
@@ -110,7 +113,7 @@ export default async function InvoiceDetailPage(
           </TableBody>
         </Table>
 
-        <div className="mt-12 pt-6 border-t text-center text-slate-500 text-sm">
+        <div className="mt-12 pt-6 border-t text-center text-muted-foreground text-sm">
           <p>Please make payment by {formatDate(invoice.due_date)}.</p>
           <p>Thank you for your business!</p>
         </div>

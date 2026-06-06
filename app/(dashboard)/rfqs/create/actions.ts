@@ -2,6 +2,8 @@
 
 import { createRFQ } from "@/lib/queries/rfqs";
 import { auth } from "@/lib/auth";
+import { uploadFile } from "@/lib/upload";
+import { logActivity } from "@/lib/queries/activity";
 
 export async function createRFQAction(formData: FormData) {
   try {
@@ -13,6 +15,13 @@ export async function createRFQAction(formData: FormData) {
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
     const deadline = formData.get("deadline") as string;
+    const attachment = formData.get("attachment") as File | null;
+    
+    let attachment_url = null;
+    if (attachment && attachment.size > 0) {
+      const url = await uploadFile(attachment);
+      if (url) attachment_url = url;
+    }
 
     // Parse items
     const itemNames = formData.getAll("product_name") as string[];
@@ -44,9 +53,19 @@ export async function createRFQAction(formData: FormData) {
         description,
         deadline,
         created_by: parseInt(session.user.id),
+        attachment_url: attachment_url || undefined,
       },
       items,
       vendorIds
+    );
+
+    // Log activity
+    await logActivity(
+      parseInt(session.user.id),
+      "CREATED",
+      "RFQ",
+      rfqId,
+      `Created RFQ "${title}"`
     );
 
     return { success: true, rfqId };

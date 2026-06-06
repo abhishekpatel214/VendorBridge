@@ -12,6 +12,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatCurrency } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 
 export default async function ReportsPage() {
   const session = await auth();
@@ -27,6 +29,13 @@ export default async function ReportsPage() {
       <PageHeader 
         title="Reports & Analytics" 
         description="Insights into procurement spend and vendor performance"
+        action={
+          <Button asChild className="bg-green-600 hover:bg-green-700">
+            <a href="/api/export?type=vendor-performance" download="vendor-performance.csv">
+              <Download className="mr-2 h-4 w-4" /> Export CSV
+            </a>
+          </Button>
+        }
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -55,7 +64,7 @@ export default async function ReportsPage() {
                 ))}
                 {spendByCategory.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={3} className="text-center py-4 text-slate-500">
+                    <TableCell colSpan={3} className="text-center py-4 text-muted-foreground">
                       No spend data available.
                     </TableCell>
                   </TableRow>
@@ -97,7 +106,7 @@ export default async function ReportsPage() {
               ))}
               {vendorPerformance.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-4 text-slate-500">
+                  <TableCell colSpan={6} className="text-center py-4 text-muted-foreground">
                     No vendor performance data available.
                   </TableCell>
                 </TableRow>

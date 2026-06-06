@@ -10,9 +10,11 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,15 +42,15 @@ export default function LoginPage() {
   return (
     <Card className="shadow-lg border-0">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Sign in</CardTitle>
+        <CardTitle className="text-2xl font-bold">{t("login.title")}</CardTitle>
         <CardDescription>
-          Enter your email and password to access your account
+          {t("login.subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("login.email")}</Label>
             <Input 
               id="email" 
               type="email" 
@@ -61,12 +63,12 @@ export default function LoginPage() {
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("login.password")}</Label>
               <Link 
                 href="/forgot-password" 
                 className="text-sm text-green-600 hover:text-green-500 font-medium"
               >
-                Forgot password?
+                {t("login.forgotPassword")}
               </Link>
             </div>
             <Input 
@@ -79,11 +81,11 @@ export default function LoginPage() {
             />
           </div>
           <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isLoading}>
-            {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Sign In"}
+            {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : t("login.signIn")}
           </Button>
         </form>
         <div className="mt-4 text-center text-sm">
-          <span className="text-slate-500">Demo accounts:</span>
+          <span className="text-slate-500">{t("login.demoAccounts")}</span>
           <div className="mt-2 space-y-1 text-slate-600">
             <p>admin@vendorbridge.com / password</p>
             <p>manager@vendorbridge.com / password</p>

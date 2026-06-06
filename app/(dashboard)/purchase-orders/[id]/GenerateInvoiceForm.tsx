@@ -42,11 +42,11 @@ export default function GenerateInvoiceForm({ poId }: { poId: number }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger render={
         <Button className="bg-green-600 hover:bg-green-700">
           <FileText className="mr-2 h-4 w-4" /> Generate Invoice
         </Button>
-      </DialogTrigger>
+      } />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Generate Invoice</DialogTitle>

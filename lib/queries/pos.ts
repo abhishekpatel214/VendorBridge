@@ -12,17 +12,33 @@ export interface PurchaseOrder {
   created_at: string;
 }
 
-export async function getPurchaseOrders() {
-  const [rows] = await pool.query<RowDataPacket[]>(
-    `SELECT po.*, 
+export async function getPurchaseOrders(vendorId?: number, search?: string) {
+  let query = `SELECT po.*, 
             v.name as vendor_name,
             r.rfq_number,
             r.title as rfq_title
      FROM purchase_orders po
      JOIN vendors v ON po.vendor_id = v.id
-     JOIN rfqs r ON po.rfq_id = r.id
-     ORDER BY po.created_at DESC`
-  );
+     JOIN rfqs r ON po.rfq_id = r.id`;
+     
+  const params: any[] = [];
+  const conditions: string[] = ["1=1"];
+  
+  if (vendorId) {
+    conditions.push("po.vendor_id = ?");
+    params.push(vendorId);
+  }
+  
+  if (search) {
+    conditions.push("(po.po_number LIKE ? OR v.name LIKE ? OR r.rfq_number LIKE ?)");
+    const searchPattern = `%${search}%`;
+    params.push(searchPattern, searchPattern, searchPattern);
+  }
+  
+  query += " WHERE " + conditions.join(" AND ");
+  query += " ORDER BY po.created_at DESC";
+
+  const [rows] = await pool.query<RowDataPacket[]>(query, params);
   return rows as any[];
 }
 
@@ -60,5 +76,5 @@ export async function getPurchaseOrderById(id: number) {
     [id]
   );
 
-  return { ...po, items: items as any[] };
+  return { ...po, items: items as any[] } as any;
 }

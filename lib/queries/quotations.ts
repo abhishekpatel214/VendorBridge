@@ -21,7 +21,7 @@ export interface QuotationItem {
   remarks: string | null;
 }
 
-export async function getQuotations(status = "") {
+export async function getQuotations(status = "", vendorId?: number) {
   let query = `
     SELECT q.*, r.rfq_number, r.title as rfq_title, v.name as vendor_name
     FROM quotations q
@@ -34,6 +34,11 @@ export async function getQuotations(status = "") {
   if (status && status !== "ALL") {
     query += " AND q.status = ?";
     params.push(status);
+  }
+
+  if (vendorId) {
+    query += " AND q.vendor_id = ?";
+    params.push(vendorId);
   }
 
   query += " ORDER BY q.created_at DESC";
@@ -91,6 +96,7 @@ export async function createQuotation(
       
       finalItems.push({
         ...item,
+        quantity: quantity,
         total_price: totalPrice
       });
     }
@@ -103,8 +109,8 @@ export async function createQuotation(
 
     for (const item of finalItems) {
       await connection.query(
-        "INSERT INTO quotation_items (quotation_id, rfq_item_id, unit_price, total_price, remarks) VALUES (?, ?, ?, ?, ?)",
-        [quotationId, item.rfq_item_id, item.unit_price, item.total_price, item.remarks]
+        "INSERT INTO quotation_items (quotation_id, rfq_item_id, unit_price, quantity, remarks) VALUES (?, ?, ?, ?, ?)",
+        [quotationId, item.rfq_item_id, item.unit_price, item.quantity, item.remarks]
       );
     }
 
@@ -128,7 +134,7 @@ export async function getQuotationsByRfq(rfqId: number) {
   );
   
   const quotations = [];
-  for (let row of rows) {
+  for (const row of rows) {
     const [items] = await pool.query<RowDataPacket[]>(
       `SELECT qi.*, ri.product_name, ri.quantity, ri.unit
        FROM quotation_items qi

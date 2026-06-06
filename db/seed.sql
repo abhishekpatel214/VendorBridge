@@ -2,13 +2,13 @@
 -- WARNING: This will insert demo data. Do not run on production directly.
 
 -- Insert Admin User (password is 'password' hashed with bcrypt)
--- Hashed 'password' = $2a$10$w/X5X1i4z41H8GgL9pQx.u0L0E/g5hNlE2X3ZtJ7YpA2rYn1yqV.S
+-- Hashed 'password' = $2b$10$bs.zE9KpSIrQ5Xt.ywCrwup28qRLYVVONWToCcpgQZ/F/miey2sH2
 INSERT IGNORE INTO users (name, email, password, role) VALUES 
-('System Admin', 'admin@vendorbridge.com', '$2a$10$w/X5X1i4z41H8GgL9pQx.u0L0E/g5hNlE2X3ZtJ7YpA2rYn1yqV.S', 'ADMIN'),
-('Procurement Manager', 'manager@vendorbridge.com', '$2a$10$w/X5X1i4z41H8GgL9pQx.u0L0E/g5hNlE2X3ZtJ7YpA2rYn1yqV.S', 'MANAGER'),
-('John Officer', 'officer@vendorbridge.com', '$2a$10$w/X5X1i4z41H8GgL9pQx.u0L0E/g5hNlE2X3ZtJ7YpA2rYn1yqV.S', 'PROCUREMENT_OFFICER'),
-('Tech Supply Co', 'vendor1@example.com', '$2a$10$w/X5X1i4z41H8GgL9pQx.u0L0E/g5hNlE2X3ZtJ7YpA2rYn1yqV.S', 'VENDOR'),
-('Office Furnishings', 'vendor2@example.com', '$2a$10$w/X5X1i4z41H8GgL9pQx.u0L0E/g5hNlE2X3ZtJ7YpA2rYn1yqV.S', 'VENDOR');
+('System Admin', 'admin@vendorbridge.com', '$2b$10$bs.zE9KpSIrQ5Xt.ywCrwup28qRLYVVONWToCcpgQZ/F/miey2sH2', 'ADMIN'),
+('Procurement Manager', 'manager@vendorbridge.com', '$2b$10$bs.zE9KpSIrQ5Xt.ywCrwup28qRLYVVONWToCcpgQZ/F/miey2sH2', 'MANAGER'),
+('John Officer', 'officer@vendorbridge.com', '$2b$10$bs.zE9KpSIrQ5Xt.ywCrwup28qRLYVVONWToCcpgQZ/F/miey2sH2', 'PROCUREMENT_OFFICER'),
+('Tech Supply Co', 'vendor1@example.com', '$2b$10$bs.zE9KpSIrQ5Xt.ywCrwup28qRLYVVONWToCcpgQZ/F/miey2sH2', 'VENDOR'),
+('Office Furnishings', 'vendor2@example.com', '$2b$10$bs.zE9KpSIrQ5Xt.ywCrwup28qRLYVVONWToCcpgQZ/F/miey2sH2', 'VENDOR');
 
 -- Insert Vendors (assuming user IDs 4 and 5 correspond to vendors above)
 -- Use a subquery to ensure correct user_id

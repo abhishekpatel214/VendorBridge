@@ -12,16 +12,32 @@ export interface Invoice {
   created_at: string;
 }
 
-export async function getInvoices() {
-  const [rows] = await pool.query<RowDataPacket[]>(
-    `SELECT i.*, 
+export async function getInvoices(vendorId?: number, search?: string) {
+  let query = `SELECT i.*, 
             v.name as vendor_name,
             po.po_number
      FROM invoices i
      JOIN vendors v ON i.vendor_id = v.id
-     JOIN purchase_orders po ON i.po_id = po.id
-     ORDER BY i.created_at DESC`
-  );
+     JOIN purchase_orders po ON i.po_id = po.id`;
+     
+  const params: any[] = [];
+  const conditions: string[] = ["1=1"];
+  
+  if (vendorId) {
+    conditions.push("i.vendor_id = ?");
+    params.push(vendorId);
+  }
+  
+  if (search) {
+    conditions.push("(i.invoice_number LIKE ? OR v.name LIKE ? OR po.po_number LIKE ?)");
+    const searchPattern = `%${search}%`;
+    params.push(searchPattern, searchPattern, searchPattern);
+  }
+  
+  query += " WHERE " + conditions.join(" AND ");
+  query += " ORDER BY i.created_at DESC";
+
+  const [rows] = await pool.query<RowDataPacket[]>(query, params);
   return rows as any[];
 }
 
@@ -59,7 +75,7 @@ export async function getInvoiceById(id: number) {
     [invoice.po_id]
   );
 
-  return { ...invoice, items: items as any[] };
+  return { ...invoice, items: items as any[] } as any;
 }
 
 export async function generateInvoice(poId: number, dueDate: string) {
@@ -103,3 +119,23 @@ export async function generateInvoice(poId: number, dueDate: string) {
     connection.release();
   }
 }
+
+export async function markInvoicePaid(invoiceId: number) {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    const [invRows] = await connection.query<any[]>("SELECT * FROM invoices WHERE id = ?", [invoiceId]);
+    if (invRows.length === 0) throw new Error("Invoice not found");
+    const inv = invRows[0];
+    await connection.query("UPDATE invoices SET status = 'PAID' WHERE id = ?", [invoiceId]);
+    await connection.query("UPDATE purchase_orders SET status = 'COMPLETED' WHERE id = ?", [inv.po_id]);
+    await connection.commit();
+    return true;
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+}
+

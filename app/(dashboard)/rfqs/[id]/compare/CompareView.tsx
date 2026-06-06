@@ -83,15 +83,15 @@ export default function CompareView({ rfq, quotations }: { rfq: any, quotations:
         <Card className="overflow-hidden">
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-slate-50">
+              <TableHeader className="bg-muted">
                 <TableRow>
-                  <TableHead className="w-[250px] sticky left-0 bg-slate-50 border-r z-10">Item Description</TableHead>
+                  <TableHead className="w-[250px] sticky left-0 bg-muted border-r z-10">Item Description</TableHead>
                   <TableHead className="w-[100px] border-r text-center">Qty</TableHead>
                   {quotations.map(q => (
                     <TableHead key={q.id} className="min-w-[200px] text-center border-r">
-                      <div className="font-bold text-slate-900 text-base">{q.vendor_name}</div>
-                      <div className="text-xs text-slate-500 font-normal mt-1">Rating: {q.vendor_rating}/5.0</div>
-                      <div className="text-xs text-slate-500 font-normal">Valid: {formatDate(q.valid_until)}</div>
+                      <div className="font-bold text-foreground text-base">{q.vendor_name}</div>
+                      <div className="text-xs text-muted-foreground font-normal mt-1">Rating: {q.vendor_rating}/5.0</div>
+                      <div className="text-xs text-muted-foreground font-normal">Valid: {formatDate(q.valid_until)}</div>
                     </TableHead>
                   ))}
                 </TableRow>
@@ -99,9 +99,9 @@ export default function CompareView({ rfq, quotations }: { rfq: any, quotations:
               <TableBody>
                 {rfq.items.map((item: any) => (
                   <TableRow key={item.id}>
-                    <TableCell className="font-medium sticky left-0 bg-white border-r z-10 shadow-[1px_0_0_0_#e2e8f0]">
+                    <TableCell className="font-medium sticky left-0 bg-card border-r z-10 shadow-[1px_0_0_0_#e2e8f0]">
                       {item.product_name}
-                      <div className="text-xs text-slate-500 font-normal">{item.specifications}</div>
+                      <div className="text-xs text-muted-foreground font-normal">{item.specifications}</div>
                     </TableCell>
                     <TableCell className="text-center border-r">
                       {item.quantity} {item.unit}
@@ -113,7 +113,7 @@ export default function CompareView({ rfq, quotations }: { rfq: any, quotations:
                           {qItem ? (
                             <div>
                               <div className="font-medium">{formatCurrency(qItem.unit_price)} / {item.unit}</div>
-                              <div className="text-xs text-slate-500 mt-1">Total: {formatCurrency(qItem.total_price)}</div>
+                              <div className="text-xs text-muted-foreground mt-1">Total: {formatCurrency(qItem.total_price)}</div>
                               {qItem.remarks && (
                                 <div className="text-xs italic text-slate-400 mt-1" title={qItem.remarks}>
                                   Note included
@@ -130,8 +130,8 @@ export default function CompareView({ rfq, quotations }: { rfq: any, quotations:
                 ))}
                 
                 {/* General Remarks Row */}
-                <TableRow className="bg-slate-50/50">
-                  <TableCell colSpan={2} className="font-bold text-right sticky left-0 bg-slate-50/50 border-r z-10 shadow-[1px_0_0_0_#e2e8f0]">
+                <TableRow className="bg-muted/50">
+                  <TableCell colSpan={2} className="font-bold text-right sticky left-0 bg-muted/50 border-r z-10 shadow-[1px_0_0_0_#e2e8f0]">
                     Terms / Remarks
                   </TableCell>
                   {quotations.map(q => (
@@ -142,8 +142,8 @@ export default function CompareView({ rfq, quotations }: { rfq: any, quotations:
                 </TableRow>
 
                 {/* Grand Total Row */}
-                <TableRow className="bg-slate-50">
-                  <TableCell colSpan={2} className="font-bold text-right sticky left-0 bg-slate-50 border-r z-10 shadow-[1px_0_0_0_#e2e8f0] text-lg">
+                <TableRow className="bg-muted">
+                  <TableCell colSpan={2} className="font-bold text-right sticky left-0 bg-muted border-r z-10 shadow-[1px_0_0_0_#e2e8f0] text-lg">
                     Grand Total
                   </TableCell>
                   {quotations.map(q => {

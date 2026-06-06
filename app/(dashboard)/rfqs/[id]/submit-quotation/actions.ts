@@ -1,8 +1,9 @@
 "use server";
 
 import { createQuotation } from "@/lib/queries/quotations";
-import { getVendorById } from "@/lib/queries/vendors";
+import { getVendorIdByUserId } from "@/lib/queries/vendors";
 import { auth } from "@/lib/auth";
+import { logActivity } from "@/lib/queries/activity";
 
 export async function submitQuotationAction(rfqId: number, formData: FormData) {
   try {
@@ -11,14 +12,10 @@ export async function submitQuotationAction(rfqId: number, formData: FormData) {
       return { error: "Only vendors can submit quotations" };
     }
 
-    // In a real app, you'd look up the vendor_id associated with this user.
-    // Assuming session.user.id is the user_id, we need to find the vendor.
-    // For this prototype, if the vendor user login is vendor1@example.com, their id is 3, vendor id is 1.
-    // Let's hardcode for the demo or fetch it.
-    
-    // For now we will assume the vendor ID is passed in or we fetch it.
-    // We'll use vendor_id = 1 for the demo if we can't map it.
-    const vendorId = 1;
+    const vendorId = await getVendorIdByUserId(parseInt(session.user.id));
+    if (!vendorId) {
+      return { error: "Vendor profile not found for this user." };
+    }
 
     const validUntil = formData.get("valid_until") as string;
     const remarks = formData.get("remarks") as string;
@@ -43,6 +40,15 @@ export async function submitQuotationAction(rfqId: number, formData: FormData) {
       valid_until: validUntil,
       remarks: remarks || null,
     }, items);
+
+    // Log activity
+    await logActivity(
+      parseInt(session.user.id),
+      "CREATED",
+      "QUOTATION",
+      quotationId,
+      `Submitted quotation for RFQ #${rfqId}`
+    );
 
     return { success: true, quotationId };
   } catch (error: any) {

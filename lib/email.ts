@@ -21,6 +21,6 @@ export async function sendEmail(to: string, subject: string, html: string) {
     return { success: true };
   } catch (error) {
     console.error("Error sending email:", error);
-    return { error: "Failed to send email" };
+    throw new Error("Failed to send email. Check SMTP credentials or network.");
   }
 }

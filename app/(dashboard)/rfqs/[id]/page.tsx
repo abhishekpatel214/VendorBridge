@@ -57,8 +57,17 @@ export default async function RFQDetailPage(
           <CardHeader>
             <CardTitle>Description</CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-slate-600 whitespace-pre-wrap">{rfq.description}</p>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground whitespace-pre-wrap">{rfq.description || "No description provided."}</p>
+            {rfq.attachment_url && (
+              <div className="pt-4 border-t border-border">
+                <h4 className="font-medium text-sm mb-2">Attachments</h4>
+                <a href={rfq.attachment_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm text-green-600 hover:text-green-700 font-medium">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                  Download Attached File
+                </a>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -81,7 +90,7 @@ export default async function RFQDetailPage(
               {rfq.items.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{item.product_name}</TableCell>
-                  <TableCell className="text-sm text-slate-500">{item.specifications}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{item.specifications}</TableCell>
                   <TableCell className="text-right">{item.quantity}</TableCell>
                   <TableCell>{item.unit}</TableCell>
                 </TableRow>
@@ -115,7 +124,7 @@ export default async function RFQDetailPage(
                 ))}
                 {rfq.vendors.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={3} className="text-center py-4 text-slate-500">
+                    <TableCell colSpan={3} className="text-center py-4 text-muted-foreground">
                       No vendors invited.
                     </TableCell>
                   </TableRow>

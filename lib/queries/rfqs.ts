@@ -10,6 +10,7 @@ export interface RFQ {
   status: "DRAFT" | "OPEN" | "CLOSED" | "AWARDED";
   created_by: number;
   created_at: string;
+  attachment_url?: string;
 }
 
 export interface RFQItem {
@@ -21,15 +22,28 @@ export interface RFQItem {
   specifications: string;
 }
 
-export async function getRFQs(status = "") {
-  let query = "SELECT * FROM rfqs WHERE 1=1";
+export async function getRFQs(status = "", vendorId?: number, search?: string) {
+  let query = "SELECT * FROM rfqs";
   const params: any[] = [];
+  const conditions: string[] = ["1=1"];
 
   if (status && status !== "ALL") {
-    query += " AND status = ?";
+    conditions.push("status = ?");
     params.push(status);
   }
 
+  if (vendorId) {
+    conditions.push("id IN (SELECT rfq_id FROM rfq_vendors WHERE vendor_id = ?)");
+    params.push(vendorId);
+  }
+  
+  if (search) {
+    conditions.push("(rfq_number LIKE ? OR title LIKE ?)");
+    const searchPattern = `%${search}%`;
+    params.push(searchPattern, searchPattern);
+  }
+
+  query += " WHERE " + conditions.join(" AND ");
   query += " ORDER BY created_at DESC";
 
   const [rows] = await pool.query<RowDataPacket[]>(query, params);
@@ -94,8 +108,8 @@ export async function createRFQ(
 
     // 2. Insert RFQ
     const [rfqResult] = await connection.query<ResultSetHeader>(
-      "INSERT INTO rfqs (rfq_number, title, description, deadline, created_by, status) VALUES (?, ?, ?, ?, ?, 'OPEN')",
-      [rfq_number, data.title, data.description, data.deadline, data.created_by]
+      "INSERT INTO rfqs (rfq_number, title, description, deadline, created_by, status, attachment_url) VALUES (?, ?, ?, ?, ?, 'OPEN', ?)",
+      [rfq_number, data.title, data.description, data.deadline, data.created_by, data.attachment_url || null]
     );
     const rfqId = rfqResult.insertId;
 

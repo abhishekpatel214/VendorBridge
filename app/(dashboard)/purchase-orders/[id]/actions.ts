@@ -2,6 +2,7 @@
 
 import { generateInvoice } from "@/lib/queries/invoices";
 import { auth } from "@/lib/auth";
+import { logActivity } from "@/lib/queries/activity";
 
 export async function generateInvoiceAction(poId: number, formData: FormData) {
   try {
@@ -14,6 +15,15 @@ export async function generateInvoiceAction(poId: number, formData: FormData) {
     if (!dueDate) return { error: "Due date is required" };
 
     const invoiceId = await generateInvoice(poId, dueDate);
+
+    // Log activity
+    await logActivity(
+      parseInt(session.user.id),
+      "CREATED",
+      "INVOICE",
+      invoiceId,
+      `Generated invoice for Purchase Order #${poId}`
+    );
 
     return { success: true, invoiceId };
   } catch (error: any) {

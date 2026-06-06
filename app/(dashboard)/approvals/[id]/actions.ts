@@ -3,6 +3,7 @@
 import pool from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { ResultSetHeader } from "mysql2";
+import { logActivity } from "@/lib/queries/activity";
 
 export async function processApprovalAction(approvalId: number, status: "APPROVED" | "REJECTED", comments: string) {
   const connection = await pool.getConnection();
@@ -70,6 +71,16 @@ export async function processApprovalAction(approvalId: number, status: "APPROVE
     }
 
     await connection.commit();
+
+    // Log activity
+    await logActivity(
+      parseInt(session.user.id),
+      status, // APPROVED or REJECTED
+      "APPROVAL",
+      approvalId,
+      `${status} approval for ${approval.type} #${approval.reference_id}`
+    );
+
     return { success: true };
   } catch (error: any) {
     await connection.rollback();

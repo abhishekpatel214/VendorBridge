@@ -1,4 +1,6 @@
 import { getPurchaseOrders } from "@/lib/queries/pos";
+import { getVendorIdByUserId } from "@/lib/queries/vendors";
+import { auth } from "@/lib/auth";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -12,9 +14,25 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { SearchX, ShoppingCart } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
-export default async function PurchaseOrdersPage() {
-  const purchaseOrders = await getPurchaseOrders();
+export default async function PurchaseOrdersPage(
+  props: { searchParams: Promise<{ search?: string }> }
+) {
+  const searchParams = await props.searchParams;
+  const search = searchParams?.search || "";
+  const session = await auth();
+  const role = session?.user?.role;
+  let vendorId: number | undefined = undefined;
+  
+  if (role === "VENDOR" && session?.user?.id) {
+    const vId = await getVendorIdByUserId(parseInt(session.user.id));
+    if (vId) vendorId = vId;
+  }
+  
+  const purchaseOrders = await getPurchaseOrders(vendorId, search);
 
   return (
     <div>
@@ -23,7 +41,18 @@ export default async function PurchaseOrdersPage() {
         description="Track and manage approved purchase orders"
       />
 
-      <div className="bg-white rounded-md shadow-sm border overflow-hidden">
+      <div className="bg-card p-4 rounded-md shadow-sm border mb-6 flex gap-4 items-center">
+        <form className="flex-1 max-w-md flex gap-2">
+          <Input 
+            name="search" 
+            placeholder="Search by PO Number or Vendor..." 
+            defaultValue={search}
+          />
+          <Button type="submit" variant="secondary">Search</Button>
+        </form>
+      </div>
+
+      <div className="bg-card rounded-md shadow-sm border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -42,7 +71,7 @@ export default async function PurchaseOrdersPage() {
                 <TableCell className="font-medium text-green-700">{po.po_number}</TableCell>
                 <TableCell>
                   <div className="font-medium">{po.rfq_number}</div>
-                  <div className="text-xs text-slate-500">{po.rfq_title}</div>
+                  <div className="text-xs text-muted-foreground">{po.rfq_title}</div>
                 </TableCell>
                 <TableCell>{po.vendor_name}</TableCell>
                 <TableCell className="text-right font-medium">
@@ -59,16 +88,17 @@ export default async function PurchaseOrdersPage() {
                 </TableCell>
               </TableRow>
             ))}
-            {purchaseOrders.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-slate-500">
-                  No purchase orders found.
-                </TableCell>
-              </TableRow>
-            )}
           </TableBody>
         </Table>
       </div>
+
+      {purchaseOrders.length === 0 && (
+        <EmptyState 
+          icon={search ? SearchX : ShoppingCart} 
+          title={search ? "No matches found" : "No purchase orders"}
+          description={search ? `No purchase orders found matching "${search}"` : "You don't have any purchase orders yet."}
+        />
+      )}
     </div>
   );
 }

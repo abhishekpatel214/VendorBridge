@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "dashboard": "ડેશબોર્ડ",
+    "vendors": "વિક્રેતાઓ (Vendors)",
+    "rfqs": "આરએફક્યુ (RFQs)",
+    "quotations": "અવતરણ (Quotations)",
+    "approvals": "મંજૂરીઓ (Approvals)",
+    "purchaseOrders": "ખરીદી ઓર્ડર (PO)",
+    "invoices": "ઇન્વૉઇસેસ (Invoices)",
+    "reports": "રિપોર્ટ્સ",
+    "activity": "પ્રવૃત્તિ લૉગ્સ",
+    "profile": "પ્રોફાઇલ"
+  },
+  "common": {
+    "save": "સાચવો",
+    "cancel": "રદ કરો",
+    "submit": "સબમિટ કરો",
+    "delete": "કાઢી નાખો",
+    "edit": "સંપાદિત કરો",
+    "view": "જુઓ",
+    "search": "શોધો...",
+    "status": "સ્થિતિ",
+    "actions": "ક્રિયાઓ",
+    "logout": "લૉગ આઉટ"
+  },
+  "dashboard": {
+    "title": "ડેશબોર્ડ",
+    "subtitle": "તમારી ખરીદી પ્રવૃત્તિઓની ઝાંખી",
+    "totalPOs": "કુલ ખરીદી ઓર્ડર",
+    "activeRFQs": "સક્રિય આરએફક્યુ",
+    "totalSpend": "કુલ ખર્ચ",
+    "pendingApprovals": "બાકી મંજૂરીઓ",
+    "recentPOs": "તાજેતરના ખરીદી ઓર્ડર",
+    "recentRFQs": "તાજેતરના આરએફક્યુ",
+    "addVendor": "વિક્રેતા ઉમેરો",
+    "newRFQ": "નવો આરએફક્યુ"
+  },
+  "profile": {
+    "title": "પ્રોફાઇલ અપડેટ કરો",
+    "subtitle": "તમારી એકાઉન્ટ વિગતો અને પાસવર્ડ મેનેજ કરો",
+    "personalInfo": "વ્યક્તિગત માહિતી",
+    "name": "પૂરું નામ",
+    "email": "ઇમેઇલ સરનામું",
+    "changePassword": "પાસવર્ડ બદલો",
+    "currentPassword": "વર્તમાન પાસવર્ડ",
+    "newPassword": "નવો પાસવર્ડ",
+    "updateProfile": "પ્રોફાઇલ અપડેટ કરો",
+    "updatePassword": "પાસવર્ડ અપડેટ કરો"
+  },
+  "login": {
+    "title": "લૉગ ઇન કરો",
+    "subtitle": "તમારું એકાઉન્ટ ઍક્સેસ કરવા માટે તમારું ઇમેઇલ અને પાસવર્ડ દાખલ કરો",
+    "email": "ઇમેઇલ",
+    "password": "પાસવર્ડ",
+    "forgotPassword": "પાસવર્ડ ભૂલી ગયા છો?",
+    "signIn": "લૉગ ઇન કરો",
+    "demoAccounts": "ડેમો એકાઉન્ટ્સ:"
+  },
+  "forgotPassword": {
+    "title": "પાસવર્ડ ભૂલી ગયા છો",
+    "subtitle": "તમારું ઇમેઇલ સરનામું દાખલ કરો અને અમે તમને તમારો પાસવર્ડ રીસેટ કરવા માટે એક લિંક મોકલીશું.",
+    "email": "ઇમેઇલ",
+    "sendLink": "રીસેટ લિંક મોકલો",
+    "backToLogin": "લૉગિન પર પાછા ફરો"
+  },
+  "resetPassword": {
+    "title": "નવો પાસવર્ડ સેટ કરો",
+    "subtitle": "કૃપા કરીને નીચે તમારો નવો પાસવર્ડ દાખલ કરો.",
+    "newPassword": "નવો પાસવર્ડ",
+    "confirmPassword": "નવો પાસવર્ડ કન્ફર્મ કરો",
+    "submit": "પાસવર્ડ રીસેટ કરો",
+    "invalidLink": "અમાન્ય લિંક",
+    "invalidMessage": "આ પાસવર્ડ રીસેટ લિંક અમાન્ય છે અથવા સુરક્ષા ટોકન ખૂટે છે. કૃપા કરીને નવી લિંકની વિનંતી કરો.",
+    "backToForgot": "ફરગૉટ પાસવર્ડ પર પાછા ફરો"
+  }
+}

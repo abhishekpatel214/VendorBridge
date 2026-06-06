@@ -1,4 +1,5 @@
 import { getQuotations } from "@/lib/queries/quotations";
+import { getVendorIdByUserId } from "@/lib/queries/vendors";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -20,8 +21,15 @@ export default async function QuotationsPage(
   const searchParams = await props.searchParams;
   const statusFilter = searchParams?.status || "ALL";
   const session = await auth();
+  const role = session?.user?.role;
+  let vendorId: number | undefined = undefined;
   
-  const quotations = await getQuotations(statusFilter);
+  if (role === "VENDOR" && session?.user?.id) {
+    const vId = await getVendorIdByUserId(parseInt(session.user.id));
+    if (vId) vendorId = vId;
+  }
+  
+  const quotations = await getQuotations(statusFilter, vendorId);
 
   return (
     <div>
@@ -30,7 +38,7 @@ export default async function QuotationsPage(
         description="Track and review submitted vendor bids"
       />
 
-      <div className="bg-white rounded-md shadow-sm border overflow-hidden">
+      <div className="bg-card rounded-md shadow-sm border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -47,7 +55,7 @@ export default async function QuotationsPage(
               <TableRow key={quotation.id}>
                 <TableCell>
                   <div className="font-medium">{quotation.rfq_number}</div>
-                  <div className="text-xs text-slate-500">{quotation.rfq_title}</div>
+                  <div className="text-xs text-muted-foreground">{quotation.rfq_title}</div>
                 </TableCell>
                 <TableCell>{quotation.vendor_name}</TableCell>
                 <TableCell>{formatDate(quotation.valid_until)}</TableCell>
@@ -67,7 +75,7 @@ export default async function QuotationsPage(
             ))}
             {quotations.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-slate-500">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   No quotations found.
                 </TableCell>
               </TableRow>

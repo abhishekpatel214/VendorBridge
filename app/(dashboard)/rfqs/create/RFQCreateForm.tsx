@@ -68,6 +68,11 @@ export default function RFQCreateForm({ vendors }: { vendors: any[] }) {
               <Label htmlFor="deadline">Deadline *</Label>
               <Input id="deadline" name="deadline" type="date" required disabled={isLoading} />
             </div>
+            <div className="space-y-2 max-w-sm">
+              <Label htmlFor="attachment">Attachment (Optional)</Label>
+              <Input id="attachment" name="attachment" type="file" disabled={isLoading} />
+              <p className="text-xs text-muted-foreground">Upload technical specs, drawings, or requirements doc.</p>
+            </div>
           </CardContent>
         </Card>
 
@@ -132,12 +137,12 @@ export default function RFQCreateForm({ vendors }: { vendors: any[] }) {
                   />
                   <Label htmlFor={`vendor-${vendor.id}`} className="flex-1 cursor-pointer">
                     <div className="font-medium">{vendor.name}</div>
-                    <div className="text-xs text-slate-500">{vendor.category} • {vendor.rating}/5.0</div>
+                    <div className="text-xs text-muted-foreground">{vendor.category} • {vendor.rating}/5.0</div>
                   </Label>
                 </div>
               ))}
               {vendors.length === 0 && (
-                <div className="col-span-full text-slate-500 text-sm">No active vendors found. Please add vendors first.</div>
+                <div className="col-span-full text-muted-foreground text-sm">No active vendors found. Please add vendors first.</div>
               )}
             </div>
           </CardContent>

@@ -10,19 +10,31 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 
+import { registerUserAction } from "./actions";
+
 export default function SignupPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    // In a real app, this would call an API route to register the user
-    // For this prototype, we'll just redirect to login
-    setTimeout(() => {
-      toast.success("Account request submitted. Admin approval required.");
-      router.push("/login");
-    }, 1000);
+    
+    try {
+      const formData = new FormData(e.currentTarget);
+      const result = await registerUserAction(formData);
+      
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success("Account created successfully! You can now log in.");
+        router.push("/login");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -38,24 +50,24 @@ export default function SignupPage() {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="firstName">First Name</Label>
-              <Input id="firstName" required disabled={isLoading} />
+              <Input id="firstName" name="firstName" required disabled={isLoading} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="lastName">Last Name</Label>
-              <Input id="lastName" required disabled={isLoading} />
+              <Input id="lastName" name="lastName" required disabled={isLoading} />
             </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="companyName">Company Name (If Vendor)</Label>
-            <Input id="companyName" disabled={isLoading} />
+            <Input id="companyName" name="companyName" disabled={isLoading} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="m@example.com" required disabled={isLoading} />
+            <Input id="email" name="email" type="email" placeholder="m@example.com" required disabled={isLoading} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required disabled={isLoading} />
+            <Input id="password" name="password" type="password" required disabled={isLoading} />
           </div>
           <Button type="submit" className="w-full bg-green-600 hover:bg-green-700" disabled={isLoading}>
             {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Sign Up"}

@@ -26,11 +26,12 @@ export default function ApprovalReviewForm({ approval }: { approval: any }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleDecision = async (status: "APPROVED" | "REJECTED", e: React.FormEvent<HTMLFormElement>) => {
+  const handleDecision = async (status: "APPROVED" | "REJECTED", e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoading(true);
     
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget.closest('form');
+    const formData = new FormData(form!);
     const comments = formData.get("comments") as string;
     
     const result = await processApprovalAction(approval.id, status, comments);
@@ -69,20 +70,20 @@ export default function ApprovalReviewForm({ approval }: { approval: any }) {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <div className="text-sm text-slate-500 mb-1">Type</div>
+                  <div className="text-sm text-muted-foreground mb-1">Type</div>
                   <div className="font-medium">{approval.type}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-slate-500 mb-1">Requested By</div>
+                  <div className="text-sm text-muted-foreground mb-1">Requested By</div>
                   <div className="font-medium">{approval.requester_name}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-slate-500 mb-1">Requested On</div>
+                  <div className="text-sm text-muted-foreground mb-1">Requested On</div>
                   <div className="font-medium">{formatDate(approval.created_at)}</div>
                 </div>
                 {approval.type === 'QUOTATION' && (
                   <div>
-                    <div className="text-sm text-slate-500 mb-1">Total Amount</div>
+                    <div className="text-sm text-muted-foreground mb-1">Total Amount</div>
                     <div className="font-bold text-green-700">{formatCurrency(approval.total_amount)}</div>
                   </div>
                 )}
@@ -97,7 +98,7 @@ export default function ApprovalReviewForm({ approval }: { approval: any }) {
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
-                  <div className="text-sm text-slate-500 mb-1">Vendor</div>
+                  <div className="text-sm text-muted-foreground mb-1">Vendor</div>
                   <div className="font-medium">{approval.vendor_name} ({approval.vendor_rating}/5.0)</div>
                 </div>
                 <Table>
@@ -114,7 +115,7 @@ export default function ApprovalReviewForm({ approval }: { approval: any }) {
                       <TableRow key={item.id}>
                         <TableCell>
                           <div className="font-medium">{item.product_name}</div>
-                          <div className="text-xs text-slate-500">{item.unit}</div>
+                          <div className="text-xs text-muted-foreground">{item.unit}</div>
                         </TableCell>
                         <TableCell className="text-right">{item.quantity}</TableCell>
                         <TableCell className="text-right">{formatCurrency(item.unit_price)}</TableCell>
@@ -155,27 +156,27 @@ export default function ApprovalReviewForm({ approval }: { approval: any }) {
 
                   <div className="flex flex-col space-y-3">
                     <Button 
-                      type="submit" 
+                      type="button" 
                       className="bg-green-600 hover:bg-green-700 w-full" 
                       disabled={isLoading}
-                      onClick={(e) => handleDecision('APPROVED', e as any)}
+                      onClick={(e) => handleDecision('APPROVED', e)}
                     >
                       {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle className="mr-2 h-4 w-4" />}
                       Approve Request
                     </Button>
                     <Button 
-                      type="submit" 
+                      type="button" 
                       variant="destructive" 
                       className="w-full" 
                       disabled={isLoading}
-                      onClick={(e) => handleDecision('REJECTED', e as any)}
+                      onClick={(e) => handleDecision('REJECTED', e)}
                     >
                       {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <XCircle className="mr-2 h-4 w-4" />}
                       Reject Request
                     </Button>
                   </div>
                   {approval.type === 'QUOTATION' && (
-                    <p className="text-xs text-slate-500 text-center mt-4">
+                    <p className="text-xs text-muted-foreground text-center mt-4">
                       Approving this quotation will automatically generate a Purchase Order.
                     </p>
                   )}
@@ -183,23 +184,23 @@ export default function ApprovalReviewForm({ approval }: { approval: any }) {
               </CardContent>
             </Card>
           ) : (
-            <Card className="sticky top-24 bg-slate-50 border-slate-200">
+            <Card className="sticky top-24 bg-muted border-border">
               <CardHeader>
                 <CardTitle>Decision Details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <div className="text-sm text-slate-500 mb-1">Status</div>
+                  <div className="text-sm text-muted-foreground mb-1">Status</div>
                   <StatusBadge status={approval.status} />
                 </div>
                 <div>
-                  <div className="text-sm text-slate-500 mb-1">Approver Comments</div>
+                  <div className="text-sm text-muted-foreground mb-1">Approver Comments</div>
                   <p className="text-slate-700 italic">
                     "{approval.comments || "No comments provided."}"
                   </p>
                 </div>
                 <div>
-                  <div className="text-sm text-slate-500 mb-1">Processed On</div>
+                  <div className="text-sm text-muted-foreground mb-1">Processed On</div>
                   <div className="font-medium">{formatDate(approval.updated_at)}</div>
                 </div>
               </CardContent>
